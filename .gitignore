@@ -23,3 +23,8 @@ go.work.sum
 
 # env file
 .env
+/.idea/.gitignore
+/go.sum
+/.idea/kafka-diode-catcher.iml
+/.idea/modules.xml
+/.idea/vcs.xml
