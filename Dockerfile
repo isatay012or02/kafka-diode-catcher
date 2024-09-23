@@ -7,6 +7,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o catcher ./cmd/catcher
+RUN go build -o catcher ./
 
 CMD ["./catcher"]
