@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"github.com/isatay012or02/kafka-diode-catcher/internal/domain"
 	"github.com/segmentio/kafka-go"
 )
@@ -18,7 +19,7 @@ func NewKafkaWriter(brokers []string, topic string) *KafkaWriter {
 }
 
 func (kw *KafkaWriter) WriteMessage(message domain.Message) error {
-	return kw.writer.WriteMessages(nil, kafka.Message{
+	return kw.writer.WriteMessages(context.Background(), kafka.Message{
 		Topic: message.Topic,
 		Value: []byte(message.Data),
 	})

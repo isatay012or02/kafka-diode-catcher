@@ -10,10 +10,10 @@ type UDPReceiver struct {
 	conn *net.UDPConn
 }
 
-func NewUDPReceiver(port int) (*UDPReceiver, error) {
+func NewUDPReceiver(Ip string, port int) (*UDPReceiver, error) {
 	addr := net.UDPAddr{
 		Port: port,
-		IP:   net.ParseIP("127.0.0.1"),
+		IP:   net.ParseIP(Ip),
 	}
 	conn, err := net.ListenUDP("udp", &addr)
 	if err != nil {
