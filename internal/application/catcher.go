@@ -2,6 +2,7 @@ package application
 
 import (
 	"fmt"
+	"github.com/isatay012or02/kafka-diode-catcher/config"
 	"github.com/isatay012or02/kafka-diode-catcher/internal/adapters"
 	"github.com/isatay012or02/kafka-diode-catcher/internal/ports"
 	"time"
@@ -11,15 +12,16 @@ type CatcherService struct {
 	UDPReceiver    *adapters.UDPReceiver
 	KafkaWriter    *adapters.KafkaWriter
 	HashCalculator ports.MessageHashCalculator
+	cfg            config.Queue
 }
 
-func NewCatcherService(udpReceiver *adapters.UDPReceiver, kafkaWriter *adapters.KafkaWriter,
-	calculator ports.MessageHashCalculator) *CatcherService {
+func NewCatcherService(udpReceiver *adapters.UDPReceiver,
+	calculator ports.MessageHashCalculator, cfg config.Queue) *CatcherService {
 
 	return &CatcherService{
 		UDPReceiver:    udpReceiver,
-		KafkaWriter:    kafkaWriter,
 		HashCalculator: calculator,
+		cfg:            cfg,
 	}
 }
 
@@ -40,7 +42,9 @@ func (c *CatcherService) ReceiveAndPublishMessages() error {
 			return fmt.Errorf("hash mismatch")
 		}
 
-		err = c.KafkaWriter.WriteMessage(msg)
+		kafkaWriter := adapters.NewKafkaWriter(c.cfg.Brokers, msg.Topic)
+
+		err = kafkaWriter.WriteMessage(msg)
 		if err != nil {
 			adapters.BroadcastStatus(-1, msg.Topic, "ERROR", time.Since(timeStart))
 			adapters.BroadcastStatusInc(-1, msg.Topic, "ERROR")

@@ -25,9 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers, cfg.Queue.Topic)
-
-	catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator)
+	catcherService := application.NewCatcherService(udpReceiver, hashCalculator, cfg.Queue)
 
 	err = catcherService.ReceiveAndPublishMessages()
 	if err != nil {
