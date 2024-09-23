@@ -11,13 +11,10 @@
   },
   "Queue": {
     "Brokers": [
-      "test1:9092",
-      "test2:9092",
-      "test3:9092",
-      "test4:9092"
+      "kafka:9092"
     ],
     "GroupID": "group",
-    "Topic": "SyslogProducer",
+    "Topic": "",
     "Metrics": {
       "Enabled": true,
       "Label": "catcher",
