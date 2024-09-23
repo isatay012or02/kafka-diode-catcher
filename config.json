@@ -1,13 +1,13 @@
 {
   "Http": {
-    "Port":8080,
+    "Port":8081,
     "GIN": {
       "ReleaseMode": false,
       "UseLogger": true,
       "UseRecovery": true
     },
     "ProfilingEnabled": true,
-    "StopTimeout": "5s"
+    "StopTimeout": 5000
   },
   "Queue": {
     "Brokers": [
@@ -17,12 +17,7 @@
       "test4:9092"
     ],
     "GroupID": "group",
-    "Topic": [
-      "SyslogProducer",
-      "MQTTProducer",
-      "FileTransferProducer",
-      "OtherProducer"
-    ],
+    "Topic": "SyslogProducer",
     "Metrics": {
       "Enabled": true,
       "Label": "catcher",
