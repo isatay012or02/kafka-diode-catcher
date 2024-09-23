@@ -1,6 +1,6 @@
 module github.com/isatay012or02/kafka-diode-catcher
 
-go 1.23
+go 1.20
 
 require (
 	github.com/gin-contrib/pprof v1.5.0
