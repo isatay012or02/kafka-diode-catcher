@@ -39,7 +39,7 @@ func RegisterKafkaDurationHistogram(subSystem string, buckets []float64) error {
 		Help:      "Histogram для отображения длительности запросов в сокет сессиях",
 		Buckets:   buckets,
 	},
-		[]string{"code", "t", "status"})
+		[]string{"code", "topic", "status"})
 
 	return prometheus.Register(kafkaDurationInSec)
 }
