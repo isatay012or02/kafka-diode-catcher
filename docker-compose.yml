@@ -1,25 +1,25 @@
 version: '3'
 services:
-  zookeeper:
+  zookeeper_catcher:
     image: confluentinc/cp-zookeeper:latest
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: 2182
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "2181:2181"
+      - "2182:2182"
     networks:
       - kafka_net
 
-  kafka:
+  kafka_catcher:
     image: confluentinc/cp-kafka:latest
     depends_on:
-      - zookeeper
+      - zookeeper_catcher
     ports:
-      - "9092:9092"
+      - "9093:9093"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_catcher:2182
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_catcher:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - kafka_net
@@ -29,7 +29,7 @@ services:
       context: https://github.com/isatay012or02/kafka-diode-catcher.git
       dockerfile: Dockerfile
     environment:
-      KAFKA_BROKER: kafka:9092
+      KAFKA_BROKER: kafka_catcher:9093
       UDP_IP: "127.0.0.1"
       UDP_PORT: 9999
     networks:
