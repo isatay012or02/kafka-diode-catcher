@@ -18,6 +18,32 @@ func main() {
 		panic(err)
 	}
 
+	go func(cfg *config.Config) {
+		srv, err := http.NewServer(cfg)
+		if err != nil {
+			panic(err)
+		}
+
+		startServerErrorCH := srv.Start()
+
+		quit := make(chan os.Signal)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+		select {
+		case err = <-startServerErrorCH:
+			{
+				panic(err)
+			}
+		case q := <-quit:
+			{
+				fmt.Printf("receive signal %s, stopping server...\n", q.String())
+				if err = srv.Stop(); err != nil {
+					fmt.Printf("stop server error: %s\n", err.Error())
+				}
+			}
+		}
+	}(cfg)
+
 	hashCalculator := adapters.NewSHA1HashCalculator()
 
 	udpReceiver, err := adapters.NewUDPReceiver(cfg.UdpAddress.Ip, cfg.UdpAddress.Port)
@@ -30,29 +56,5 @@ func main() {
 	err = catcherService.ReceiveAndPublishMessages()
 	if err != nil {
 		panic(err)
-	}
-
-	srv, err := http.NewServer(cfg)
-	if err != nil {
-		panic(err)
-	}
-
-	startServerErrorCH := srv.Start()
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
-	select {
-	case err = <-startServerErrorCH:
-		{
-			panic(err)
-		}
-	case q := <-quit:
-		{
-			fmt.Printf("receive signal %s, stopping server...\n", q.String())
-			if err = srv.Stop(); err != nil {
-				fmt.Printf("stop server error: %s\n", err.Error())
-			}
-		}
 	}
 }
