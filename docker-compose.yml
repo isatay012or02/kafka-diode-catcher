@@ -34,9 +34,8 @@ services:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_catcher:9093
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper_catcher:2182
-    links:
-      - kafka_catcher
-      - zookeeper_catcher
+    networks:
+      - kafka_net
 
   catcher:
     build:
@@ -49,8 +48,6 @@ services:
     networks:
       - kafka_net
     restart: always
-    links:
-      - kafka-ui
 
 networks:
   kafka_net:
