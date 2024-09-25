@@ -28,10 +28,10 @@ services:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui-catcher
     ports:
-      - 8091:8081
+      - 8092:8080
     restart: always
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_NAME=local-catcher
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_catcher:9093
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper_catcher:2182
     networks:
