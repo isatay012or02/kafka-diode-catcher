@@ -20,7 +20,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper_catcher:2182
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_catcher:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - kafka_net
 
