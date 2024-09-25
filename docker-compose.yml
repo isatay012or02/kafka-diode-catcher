@@ -24,6 +24,21 @@ services:
     networks:
       - kafka_net
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - 8091:8081
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_catcher:9093,kafka3:9094
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper_catcher:2182
+    links:
+      - kafka_catcher
+      - kafka3
+      - zookeeper_catcher
+
   catcher:
     build:
       context: https://github.com/isatay012or02/kafka-diode-catcher.git
