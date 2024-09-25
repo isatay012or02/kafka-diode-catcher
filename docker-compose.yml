@@ -24,9 +24,9 @@ services:
     networks:
       - kafka_net
 
-  kafka-ui:
+  kafka-ui-catcher:
     image: provectuslabs/kafka-ui
-    container_name: kafka-ui
+    container_name: kafka-ui-catcher
     ports:
       - 8091:8081
     restart: always
