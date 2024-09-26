@@ -10,10 +10,9 @@ type KafkaWriter struct {
 	writer *kafka.Writer
 }
 
-func NewKafkaWriter(brokers []string, topic string) *KafkaWriter {
+func NewKafkaWriter(brokers []string) *KafkaWriter {
 	writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers: brokers,
-		Topic:   topic,
 	})
 	return &KafkaWriter{writer: writer}
 }

@@ -20,13 +20,13 @@ func main() {
 
 	go func(cfg *config.Config) {
 		hashCalculator := adapters.NewSHA1HashCalculator()
-
+		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers)
 		udpReceiver, err := adapters.NewUDPReceiver(cfg.UdpAddress.Ip, cfg.UdpAddress.Port)
 		if err != nil {
 			panic(err)
 		}
 
-		catcherService := application.NewCatcherService(udpReceiver, hashCalculator, cfg.Queue)
+		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue)
 
 		err = catcherService.ReceiveAndPublishMessages()
 		if err != nil {

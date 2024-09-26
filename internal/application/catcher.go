@@ -15,11 +15,12 @@ type CatcherService struct {
 	cfg            config.Queue
 }
 
-func NewCatcherService(udpReceiver *adapters.UDPReceiver,
+func NewCatcherService(udpReceiver *adapters.UDPReceiver, kafkaWriter *adapters.KafkaWriter,
 	calculator ports.MessageHashCalculator, cfg config.Queue) *CatcherService {
 
 	return &CatcherService{
 		UDPReceiver:    udpReceiver,
+		KafkaWriter:    kafkaWriter,
 		HashCalculator: calculator,
 		cfg:            cfg,
 	}
@@ -42,9 +43,7 @@ func (c *CatcherService) ReceiveAndPublishMessages() error {
 			return fmt.Errorf("hash mismatch")
 		}
 
-		kafkaWriter := adapters.NewKafkaWriter(c.cfg.Brokers, msg.Topic)
-
-		err = kafkaWriter.WriteMessage(msg)
+		err = c.KafkaWriter.WriteMessage(msg)
 		if err != nil {
 			adapters.BroadcastStatus(-1, msg.Topic, "ERROR", time.Since(timeStart))
 			adapters.BroadcastStatusInc(-1, msg.Topic, "ERROR")
