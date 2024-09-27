@@ -72,6 +72,7 @@ func RegisterMetrics() error {
 			Name:      "Status",
 			Help:      "счетчик количества стартов в kafka",
 		},
+
 		[]string{"code", "topic", "status"},
 	)
 
