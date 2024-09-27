@@ -12,17 +12,19 @@ type CatcherService struct {
 	UDPReceiver    *adapters.UDPReceiver
 	KafkaWriter    *adapters.KafkaWriter
 	HashCalculator ports.MessageHashCalculator
-	cfg            config.Queue
+	Cfg            config.Queue
+	EnableHash     bool
 }
 
 func NewCatcherService(udpReceiver *adapters.UDPReceiver, kafkaWriter *adapters.KafkaWriter,
-	calculator ports.MessageHashCalculator, cfg config.Queue) *CatcherService {
+	calculator ports.MessageHashCalculator, cfg config.Queue, enableHash bool) *CatcherService {
 
 	return &CatcherService{
 		UDPReceiver:    udpReceiver,
 		KafkaWriter:    kafkaWriter,
 		HashCalculator: calculator,
-		cfg:            cfg,
+		Cfg:            cfg,
+		EnableHash:     enableHash,
 	}
 }
 
@@ -38,9 +40,11 @@ func (c *CatcherService) ReceiveAndPublishMessages() error {
 			return err
 		}
 
-		calculatedHash := c.HashCalculator.Calculate(msg.Data)
-		if calculatedHash != msg.Hash {
-			return fmt.Errorf("hash mismatch")
+		if c.EnableHash {
+			calculatedHash := c.HashCalculator.Calculate(msg.Value)
+			if calculatedHash != msg.Hash {
+				return fmt.Errorf("hash mismatch")
+			}
 		}
 
 		err = c.KafkaWriter.WriteMessage(msg)

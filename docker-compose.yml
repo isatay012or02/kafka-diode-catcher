@@ -42,20 +42,11 @@ services:
       context: https://github.com/isatay012or02/kafka-diode-catcher.git
       dockerfile: Dockerfile
     environment:
-      KAFKA_BROKER: kafka_catcher:9093
       UDP_IP: "127.0.0.1"
       UDP_PORT: 9999
+      ENABLE_HASH: "true"
     networks:
       - kafka_net
-    restart: always
-
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_CLEANUP=true
     restart: always
 
 networks:

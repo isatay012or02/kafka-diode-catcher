@@ -20,6 +20,7 @@ func NewKafkaWriter(brokers []string) *KafkaWriter {
 func (kw *KafkaWriter) WriteMessage(message domain.Message) error {
 	return kw.writer.WriteMessages(context.Background(), kafka.Message{
 		Topic: message.Topic,
-		Value: []byte(message.Data),
+		Key:   []byte(message.Key),
+		Value: []byte(message.Value),
 	})
 }

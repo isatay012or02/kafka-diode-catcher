@@ -8,6 +8,7 @@ import (
 	"github.com/isatay012or02/kafka-diode-catcher/internal/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 )
 
@@ -19,14 +20,27 @@ func main() {
 	}
 
 	go func(cfg *config.Config) {
-		hashCalculator := adapters.NewSHA1HashCalculator()
-		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers)
-		udpReceiver, err := adapters.NewUDPReceiver(cfg.UdpAddress.Ip, cfg.UdpAddress.Port)
+		enableHashEnv := os.Getenv("ENABLE_HASH")
+		enableHash := false
+		if enableHashEnv == "true" {
+			enableHash = true
+		}
+
+		udpIP := os.Getenv("UPD_IP")
+		updPortEnv := os.Getenv("UPD_PORT")
+		udpPort, err := strconv.Atoi(updPortEnv)
 		if err != nil {
 			panic(err)
 		}
 
-		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue)
+		hashCalculator := adapters.NewSHA1HashCalculator()
+		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers)
+		udpReceiver, err := adapters.NewUDPReceiver(udpIP, udpPort)
+		if err != nil {
+			panic(err)
+		}
+
+		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue, enableHash)
 
 		err = catcherService.ReceiveAndPublishMessages()
 		if err != nil {
