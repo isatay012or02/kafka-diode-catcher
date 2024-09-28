@@ -45,6 +45,7 @@ services:
       UDP_IP: "127.0.0.1"
       UDP_PORT: 9999
       ENABLE_HASH: "true"
+      KAFKA_LOGGER_TOPIC: "SyslogProducer"
     networks:
       - kafka_net
     restart: always
