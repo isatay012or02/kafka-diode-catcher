@@ -44,11 +44,11 @@ func RegisterKafkaDurationHistogram(subSystem string, buckets []float64) error {
 	return prometheus.Register(kafkaDurationInSec)
 }
 
-func BroadcastStatusInc(code int, topic, status string) {
+func BroadcastStatusInc(code int, value, status string) {
 	if broadcastClientStatusCnt == nil {
 		return
 	}
-	broadcastClientStatusCnt.WithLabelValues(strconv.Itoa(code), topic, status).Inc()
+	broadcastClientStatusCnt.WithLabelValues(strconv.Itoa(code), value, status).Inc()
 }
 
 func BroadcastStatus(code int, topic, status string, duration time.Duration) {
@@ -72,7 +72,7 @@ func RegisterMetrics() error {
 			Name:      "Status",
 			Help:      "счетчик количества стартов в kafka",
 		},
-		[]string{"code", "topic", "status"},
+		[]string{"code", "value", "status"},
 	)
 
 	return prometheus.Register(broadcastClientStatusCnt)

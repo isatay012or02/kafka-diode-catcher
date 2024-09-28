@@ -20,6 +20,12 @@ func main() {
 	}
 
 	go func(cfg *config.Config) {
+		var loggerBroker []string
+		loggerBroker[0] = os.Getenv("KAFKA_LOGGER_BROKER")
+		loggerTopic := os.Getenv("KAFKA_LOGGER_TOPIC")
+
+		logger := adapters.NewKafkaLogger(loggerBroker, loggerTopic)
+
 		enableHashEnv := os.Getenv("ENABLE_HASH")
 		enableHash := false
 		if enableHashEnv == "true" {
@@ -40,9 +46,10 @@ func main() {
 			panic(err)
 		}
 
-		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue, enableHash)
+		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue, enableHash, logger)
 
 		err = catcherService.ReceiveAndPublishMessages()
+		logger.SendMetricsToKafka()
 		if err != nil {
 			panic(err)
 		}
