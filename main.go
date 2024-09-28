@@ -9,7 +9,9 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"sync"
 	"syscall"
+	"time"
 )
 
 func main() {
@@ -18,8 +20,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	var wg sync.WaitGroup
+
+	wg.Add(1)
 
 	go func(cfg *config.Config) {
+		defer wg.Done()
+
 		loggerTopic := os.Getenv("KAFKA_LOGGER_TOPIC")
 
 		enableHashEnv := os.Getenv("ENABLE_HASH")
@@ -37,6 +44,9 @@ func main() {
 
 		hashCalculator := adapters.NewSHA1HashCalculator()
 		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers, loggerTopic)
+
+		kafkaWriter.Log(fmt.Sprintf("[%v][INFO]Caster service started", time.Now()))
+
 		udpReceiver, err := adapters.NewUDPReceiver(udpIP, udpPort)
 		if err != nil {
 			panic(err)
@@ -74,4 +84,6 @@ func main() {
 			}
 		}
 	}
+
+	wg.Wait()
 }
