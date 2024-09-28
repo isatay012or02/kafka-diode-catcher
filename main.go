@@ -45,7 +45,7 @@ func main() {
 		hashCalculator := adapters.NewSHA1HashCalculator()
 		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers, loggerTopic)
 
-		kafkaWriter.Log(fmt.Sprintf("[%v][INFO]Caster service started", time.Now()))
+		kafkaWriter.Log(fmt.Sprintf("[%v][INFO]Catcher service started", time.Now()))
 
 		udpReceiver, err := adapters.NewUDPReceiver(udpIP, udpPort)
 		if err != nil {
