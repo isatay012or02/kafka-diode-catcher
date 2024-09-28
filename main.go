@@ -28,8 +28,8 @@ func main() {
 			enableHash = true
 		}
 
-		udpIP := os.Getenv("UPD_IP")
-		updPortEnv := os.Getenv("UPD_PORT")
+		udpIP := os.Getenv("UDP_IP")
+		updPortEnv := os.Getenv("UDP_PORT")
 		udpPort, err := strconv.Atoi(updPortEnv)
 		if err != nil {
 			panic(err)
