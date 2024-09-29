@@ -23,14 +23,13 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
-    command: "sh -c 'kafka-topics.sh --create --topic LogsAndMetrics --bootstrap-server kafka_catcher:9093 --replication-factor 1 --partitions 1; sleep 300'"
     networks:
       - kafka_net
 
   topic_creator:
     image: confluentinc/cp-kafka:latest
     depends_on:
-      - kafka_caster
+      - kafka_catcher
     networks:
       - kafka_net
     entrypoint: /bin/sh
