@@ -44,7 +44,7 @@ func (c *CatcherService) ReceiveAndPublishMessages() error {
 			calculatedHash := c.HashCalculator.Calculate(msg.Value)
 			if calculatedHash != msg.Hash {
 				adapters.BroadcastStatusInc(-3, msg.Topic, "ERROR")
-				c.KafkaWriter.Log(fmt.Sprintf("[%v][Error] %v", time.Now(), "hash mismatch"))
+				c.KafkaWriter.Log(fmt.Sprintf("[%v][Error] %v, hash:%v, key: %v, value:%v", time.Now(), "hash mismatch", msg.Hash, msg.Key, msg.Value))
 				return fmt.Errorf("hash mismatch")
 			}
 		}

@@ -47,7 +47,7 @@ func (kl *KafkaWriter) SendMetricsToKafka() {
 	}
 
 	var buf bytes.Buffer
-	encoder := expfmt.NewEncoder(&buf, expfmt.OpenMetricsType)
+	encoder := expfmt.NewEncoder(&buf, expfmt.FmtOpenMetrics_0_0_1)
 
 	for _, mf := range metricFamilies {
 		err := encoder.Encode(mf)
