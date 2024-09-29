@@ -44,6 +44,7 @@ func main() {
 
 		hashCalculator := adapters.NewSHA1HashCalculator()
 		kafkaWriter := adapters.NewKafkaWriter(cfg.Queue.Brokers, loggerTopic)
+		defer kafkaWriter.Close()
 
 		kafkaWriter.Log(fmt.Sprintf("[%v][INFO]Catcher service started", time.Now()))
 
@@ -55,7 +56,6 @@ func main() {
 		catcherService := application.NewCatcherService(udpReceiver, kafkaWriter, hashCalculator, cfg.Queue, enableHash)
 		err = catcherService.ReceiveAndPublishMessages()
 		kafkaWriter.SendMetricsToKafka()
-		kafkaWriter.Close()
 		if err != nil {
 			panic(err)
 		}
