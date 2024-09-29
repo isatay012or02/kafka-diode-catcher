@@ -60,9 +60,11 @@ services:
     build:
       context: https://github.com/isatay012or02/kafka-diode-catcher.git
       dockerfile: Dockerfile
+    ports:
+      - "9999:9999/udp"
     environment:
       UDP_IP: "127.0.0.1"
-      UDP_PORT: 9999
+      UDP_PORT:
       ENABLE_HASH: "true"
       KAFKA_LOGGER_TOPIC: "LogsAndMetrics"
     networks:
